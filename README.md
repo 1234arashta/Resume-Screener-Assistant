@@ -1,39 +1,115 @@
 # Resume Screener Assistant
 
-A Streamlit application for evidence-based resume/JD comparison. It generates a structured match report and stores analyses in SQLite.
+An AI-powered resume screening application built with Streamlit and Google's Gemini API. It evaluates candidate resumes against job descriptions, generates structured recruitment insights, and maintains an analysis history using SQLite.
 
 ## Features
-- Job description and resume text inputs
-- LLM report: 0–100 match score, exactly 5 matching skills, 3 gaps, 3 interview questions
-- Pydantic schema validation and one retry
-- SQLite persistence and searchable/filterable history
-- Empty-input checks, input truncation, API error messages
-- Prompt-injection-resistant framing and human-review disclaimer
 
-## Setup
-1. Install Python 3.10+ and Git.
-2. Create/activate a virtual environment:
-   - Windows: `python -m venv .venv` then `.venv\\Scripts\\activate`
-   - macOS/Linux: `python3 -m venv .venv` then `source .venv/bin/activate`
-3. Install: `pip install -r requirements.txt`
-4. Copy `.env.example` to `.env`; add your OpenAI API key. Never commit `.env`.
-5. Run: `streamlit run app.py`
+- **AI Resume Analysis:** Compare resumes against job descriptions using Gemini.
+- **Match Score:** Generate a candidate compatibility score between 0 and 100.
+- **Matching Skills:** Identify the top 5 skills matching the job description.
+- **Skill Gaps:** Identify the top 3 missing or underdeveloped skills.
+- **Interview Questions:** Generate 3 candidate-specific interview questions.
+- **Structured Output:** Validate AI-generated responses using Pydantic.
+- **Analysis History:** Store and retrieve candidate analyses using SQLite.
+- **Search and Filtering:** Search candidate records and filter by match score.
+- **Error Handling:** Handle empty inputs, invalid AI responses, and API errors.
+
+## Tech Stack
+
+- Python
+- Streamlit
+- Google Gemini API (`google-genai`)
+- Pydantic
+- SQLite
+- Pytest
+
+## Project Structure
+
+```text
+Resume_Screener_Assistant/
+├── app.py
+├── requirements.txt
+├── test_app.py
+├── .env.example
+├── .gitignore
+├── README.md
+└── AI_USAGE.md
+```
+
+## Installation and Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/1234arashta/Resume-Screener-Assistant.git
+cd Resume-Screener-Assistant
+```
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### 4. Configure Gemini API
+
+Create a `.env` file in the project directory:
+
+```dotenv
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-3.8-flash
+DB_PATH=analyses.db
+```
+
+Obtain an API key from [Google AI Studio](https://aistudio.google.com/apikey).
+
+Never commit your actual API key.
+
+### 5. Run the application
+
+```bash
+python -m streamlit run app.py
+```
+
+Open http://localhost:8501 in your browser.
+
+## Testing
+
+Run the test suite:
+
+```bash
+python -m pytest -v
+```
 
 ## Architecture
-- `app.py`: Streamlit UI, orchestration, API call, validation, persistence and history.
-- OpenAI chat completion with JSON response mode.
-- Pydantic validates score bounds and exact list lengths.
-- SQLite table `analyses` stores candidate label, timestamp, source text and report JSON.
 
-## Design decisions / assumptions
-- Resume and JD are pasted as text; PDF/DOCX parsing is outside this first version.
-- Input is capped at 20,000 characters per field to control latency/cost.
-- The match score is a decision-support estimate, not an objective hiring verdict.
-- No protected traits are evaluated; HR must review evidence and make decisions.
-- Local SQLite is suitable for a demo; production needs access controls, encryption, retention policies and secure hosting.
+1. The user enters a job description and candidate resume.
+2. The application sends the screening prompt to the Gemini API.
+3. Gemini returns structured candidate evaluation results.
+4. Pydantic validates the generated response.
+5. The application displays the score, matching skills, skill gaps, and interview questions.
+6. The analysis is saved to SQLite.
+7. The History page retrieves stored analyses and supports search and score filtering.
 
-## Privacy
-Keep API keys in environment variables/secrets. Do not print keys or raw resumes in logs. In production, minimize stored personal data, encrypt at rest/in transit, restrict HR access, define retention/deletion schedules, obtain appropriate notice/consent, and audit access. This demo stores resume/JD text locally in SQLite; delete the database when no longer needed.
+## Privacy and Security
 
-## Tests
-Run `pytest -q` (see `test_app.py`).
+- API credentials are stored locally in `.env`.
+- `.env` is excluded from version control.
+- Candidate analyses are stored locally in SQLite.
+- Resume content is sent to the configured Gemini API for analysis.
+
+## Author
+
+GitHub: [1234arashta](https://github.com/1234arashta)
