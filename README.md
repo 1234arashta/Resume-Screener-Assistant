@@ -110,6 +110,14 @@ python -m pytest -v
 - Candidate analyses are stored locally in SQLite.
 - Resume content is sent to the configured Gemini API for analysis.
 
+## Demo Recording
+
+The complete project walkthrough is available here:
+
+[Watch Resume Screener Assistant Demo](
+https://github.com/1234arashta/Resume-Screener-Assistant/releases/download/v1.0/Screen.Recording.mp4)
+
+
 ## Author
 
 GitHub: [1234arashta](https://github.com/1234arashta)
